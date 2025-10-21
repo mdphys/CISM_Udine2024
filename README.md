@@ -1,9 +1,14 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17406808.svg)]([https://doi.org/10.5281/zenodo.xxxxxxx](https://doi.org/10.5281/zenodo.17406808))
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17406808.svg)](https://doi.org/10.5281/zenodo.zenodo.17406808)
 
 # CISM Udine 2024 – Physics of Musical Instruments
 
-This repository contains MATLAB scripts and resources developed for the course [Physics of Musical Instruments](https://cism.it/en/activities/courses/C2404/), held at Udine in May 2024 (by CISM).  
-It focuses on numerical methods, eigenvalue problems, and their application to acoustics and instrument‑making.
+
+**Author:** Michele Ducceschi  
+**Affiliation:** NEMUS Lab, University of Bologna  
+**Email:** michele.ducceschi@unibo.it  
+**Course:** CISM Course "Physics of Musical Instruments" (Udine, 2024)
+
+This repository contains MATLAB scripts and resources developed for the course [Physics of Musical Instruments](https://cism.it/en/activities/courses/C2404/), held at Udine in May 2024 (by CISM). It focuses on numerical methods, eigenvalue problems, and their application to acoustics and instrument‑making.
 
 ---
 
