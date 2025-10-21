@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17406808.svg)]([https://doi.org/10.5281/zenodo.xxxxxxx](https://doi.org/10.5281/zenodo.17406808))
+
 # CISM Udine 2024 – Physics of Musical Instruments
 
 This repository contains MATLAB scripts and resources developed for the course [Physics of Musical Instruments](https://cism.it/en/activities/courses/C2404/), held at Udine in May 2024 (by CISM).  
