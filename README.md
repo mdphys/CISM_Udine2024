@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17406808.svg)](https://doi.org/10.5281/zenodo.zenodo.17406808)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17406808.svg)](https://doi.org/10.5281/zenodo.17406808)
 
 # CISM Udine 2024 – Physics of Musical Instruments
 
