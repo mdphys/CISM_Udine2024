@@ -1,6 +1,6 @@
 # CISM Udine 2024 – Computational Mechanics Exercises
 
-This repository contains MATLAB scripts and resources developed for the [CISM course on the acoustics of musical instruments](https://cism.it/en/activities/courses/C2404/), with a focus on numerical methods eigenvalue problems.
+This repository contains MATLAB scripts and resources developed for the [CISM course on the acoustics of musical instruments](https://cism.it/en/activities/courses/C2404/), with a focus on numerical methods and eigenvalue problems.
 
 ##  Overview
 
@@ -8,10 +8,9 @@ The project includes a collection of examples, exercises, and numerical experime
 - Euler–Bernoulli beam theory
 - Finite difference methods
 - Numerical error convergence
-- Polynomial interpolation and Vandermonde systems
+- Polynomial interpolation via Lagrange and Vandermonde methods
 - Poisson equation solvers
 
-These materials are intended for educational and research purposes in computational mechanics, numerical methods, and applied mathematics.
 
 ##  Repository Structure
 
