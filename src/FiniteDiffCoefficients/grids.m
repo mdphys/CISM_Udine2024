@@ -1,21 +1,31 @@
-%==========================================================================
-%  GRID GENERATION EXAMPLES
-%--------------------------------------------------------------------------
-%  This script illustrates different types of one-dimensional grids that
-%  can be used for finite difference or finite element discretizations.
+%-------------------------------------------------------------------------
+%                                 CISM
+%                        GRID GENERATION EXAMPLES
+%             CISM Course "Physics of Musical Instruments"
+%                          Michele Ducceschi
+%                       University of Bologna
+%                            11 May 2024
+%-------------------------------------------------------------------------
 %
-%  It generates and plots:
-%     1. Uniform grid   - evenly spaced nodes
-%     2. Smooth grid    - smoothly varying spacing
-%     3. Random grid    - irregular node distribution
+% Purpose
+% -------
+% Illustrate different types of one-dimensional grids used in numerical
+% discretizations (finite difference or finite element methods).
 %
-%  Developed for:
-%     CISM Udine 2024 – Computational Mechanics Course
+% Content
+% -------
+% The script generates and plots three grid types:
+%   1) Uniform grid   – evenly spaced nodes
+%   2) Smooth grid    – smoothly varying spacing
+%   3) Random grid    – irregular node distribution
 %
-%  Author: Michele Ducceschi
-%  Institution University of Bologna 
-%  11 May 2024
-%==========================================================================
+% Notes
+% -----
+% - These grids are often used to study numerical accuracy and stability
+%   in finite-difference schemes.
+% - The smooth grid uses a quadratic mapping for node clustering.
+%-------------------------------------------------------------------------
+
 
 clear all
 close all

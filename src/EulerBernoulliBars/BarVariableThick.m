@@ -107,8 +107,8 @@ for nBar = 1:3
         end
 
         % Append
-        x_nodes = [x_nodes; x_next]; %#ok<AGROW>
-        hvec    = [hvec; h];         %#ok<AGROW>
+        x_nodes = [x_nodes; x_next]; 
+        hvec    = [hvec; h];         
         x       = x_next;
 
         % Update thickness and section for next step
@@ -145,9 +145,9 @@ for nBar = 1:3
         I = (wb*y^3)/12;
         A = wb*y;
 
-        Avec = [Avec; A]; %#ok<AGROW>
-        Ivec = [Ivec; I]; %#ok<AGROW>
-        tvec = [tvec; y]; %#ok<AGROW>
+        Avec = [Avec; A]; 
+        Ivec = [Ivec; I]; 
+        tvec = [tvec; y]; 
     end
 
     % Remove boundary entries for I in interior (used in D2^T * diag(I) * D2)
@@ -196,7 +196,7 @@ for nBar = 1:3
     % Generalized eigenproblem -> standard form
     KM   = Mmat \ (E * (biHarm + eps_stab*speye(M+1)));
 
-    [V, Dlam] = eig(full(KM));     %#ok<*MINV>
+    [V, Dlam] = eig(full(KM));     
     lam       = diag(Dlam);
     [lam, ind]= sort(lam, 'ascend');
     V         = V(:,ind);

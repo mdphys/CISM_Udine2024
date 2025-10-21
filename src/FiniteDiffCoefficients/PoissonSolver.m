@@ -1,24 +1,33 @@
-%==========================================================================
-%  APPROXIMATION OF DERIVATIVES
-%  Task: Solve 1D Poisson's Equation on Nonuniform Grids
-%--------------------------------------------------------------------------
-%  This script solves
-%       s''(x) = w(x)  on  x in (0, L),  with  s(0) = s(L) = 0
-%  using second–order finite differences on three grids:
-%     1) Uniform,  2) Smoothly varying,  3) Random (sorted)
+%-------------------------------------------------------------------------
+%                                 CISM
+%                  APPROXIMATION OF DERIVATIVES (POISSON)
+%             CISM Course "Physics of Musical Instruments"
+%                          Michele Ducceschi
+%                       University of Bologna
+%                            11 May 2024
+%-------------------------------------------------------------------------
 %
-%  Exact manufactured solution:
+% Purpose
+% -------
+% Solve the 1D Poisson equation
+%       s''(x) = w(x),   x ∈ (0, L),   with  s(0) = s(L) = 0
+% using second-order finite differences on three grid types:
+%   1) Uniform
+%   2) Smoothly varying
+%   3) Random (sorted)
+%
+% Exact Solution
+% --------------
+% The manufactured exact solution is:
 %       s(x) = -log(cosh(x)) + (x/L)*log(cosh(L))
-%  which implies    w(x) = s''(x) = -(1 - tanh(x)^2) = -sech(x)^2.
+% which implies:
+%       w(x) = s''(x) = -(1 − tanh(x)^2) = −sech(x)^2
 %
-%  The code assembles the discrete Laplacian for a nonuniform grid and
-%  compares the numerical solution against the exact solution.
-%
-%  Developed for: CISM Course "Physics of Musical Instruments"
-%  Author:       Michele Ducceschi
-%  Institution:  University of Bologna
-%  Date:         11 May 2024
-%==========================================================================
+% Notes
+% -----
+% - The script assembles the discrete Laplacian for nonuniform grids.
+% - Compares numerical and analytical solutions for validation.
+%-------------------------------------------------------------------------
 
 clear; close all; clc;
 

@@ -1,31 +1,34 @@
-%------------------------------------------------------------------------
-%                   Approximation of Derivatives
-%          Task: approximate the derivative of exp(sin(x))
-%         CISM Course "Physics of Musical Instruments"
-%                         Michele Ducceschi
-%                      University of Bologna
-%                         13 Dec 2023
+%-------------------------------------------------------------------------
+%                                 CISM
+%        APPROXIMATION OF DERIVATIVES – VANDERMONDE INTERPOLATION
+%             CISM Course "Physics of Musical Instruments"
+%                          Michele Ducceschi
+%                       University of Bologna
+%                            13 Dec 2023
 %-------------------------------------------------------------------------
 %
-% Goal
-% ----
-% Let u(x) = exp(sin x). Around an expansion point x0, we:
-%   1) choose a small set of sample points {x_j},
-%   2) build the Vandermonde system in the *shifted* monomial basis
-%      (x - x0)^(k-1),
-%   3) compute the polynomial interpolant p(x) that matches u(x_j),
-%   4) read off p'(x0) from the coefficient of (x - x0) (i.e., a_2).
+% Purpose
+% -------
+% Let  u(x) = exp(sin x).  Around an expansion point  x0, we:
+%   1) Choose a small set of sample points {x_j}.
+%   2) Build the Vandermonde system in the shifted monomial basis
+%         (x − x0)^(k−1).
+%   3) Compute the polynomial interpolant  p(x)  matching  u(x_j).
+%   4) Extract  p'(x0)  from the coefficient of  (x − x0)  (i.e., a₂).
 %
-% We compare two distinct node distributions and visualize:
-%   - the exact function u(x)
-%   - the interpolating polynomial p(x)
-%   - the expansion point x0 and the chosen nodes
+% Comparison
+% ----------
+% Two distinct node distributions are compared and visualized alongside:
+%   • the exact function  u(x)
+%   • the interpolating polynomial  p(x)
+%   • the expansion point  x0  and the chosen sample nodes
 %
 % Note
 % ----
-% In this centered monomial basis, if
-%     p(x) = a1 + a2 (x - x0) + a3 (x - x0)^2 + ...
-% then the derivative approximation at x0 is simply p'(x0) = a2.
+% In this centered monomial basis,
+%       p(x) = a₁ + a₂ (x − x0) + a₃ (x − x0)² + ...
+% the derivative approximation at  x0  is simply:
+%       p'(x0) = a₂
 %-------------------------------------------------------------------------
 
 clear all

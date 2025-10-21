@@ -1,29 +1,35 @@
-%------------------------------------------------------------------------
-%                   Approximation of Derivatives
-%          Task: approximate the derivative of exp(sin(x))
-%         CISM Course "Physics of Musical Instruments"
-%                         Michele Ducceschi
-%                      University of Bologna
-%                         13 Dec 2023
+%-------------------------------------------------------------------------
+%                                 CISM
+%              APPROXIMATION OF DERIVATIVES – INTERPOLATION
+%             CISM Course "Physics of Musical Instruments"
+%                          Michele Ducceschi
+%                       University of Bologna
+%                            13 Dec 2023
 %-------------------------------------------------------------------------
 %
-% Goal
-% ----
-% Given u(x) = exp(sin x), approximate u'(x0) at a point x0 using
-% polynomial interpolation built from a small set of sample points.
-% We compare:
-%   • Vandermonde (monomial) interpolation centered at x0
-%   • Lagrange interpolation (equivalent polynomial in a different basis)
+% Purpose
+% -------
+% Given  u(x) = exp(sin x),  approximate  u'(x0)  at a reference point x0
+% using polynomial interpolation based on a few sample points.
 %
-% Key fact
+% Method
+% ------
+% Two interpolation approaches are compared:
+%   1) Vandermonde (monomial basis) interpolation centered at x0
+%   2) Lagrange interpolation (equivalent polynomial, different basis)
+%
+% Key Idea
 % --------
-% If p(x) = a0 + a1 (x - x0) + a2 (x - x0)^2 + ... interpolates u(x),
-% then the derivative estimate at x0 is simply p'(x0) = a1.
+% If  p(x) = a0 + a1 (x − x0) + a2 (x − x0)^2 + ...  interpolates u(x),
+% then the derivative estimate at the expansion point is:
+%       p'(x0) = a1
 %
-% We demonstrate two choices of sample points and also visualize the
-% interpolants p(x) alongside the true function u(x).
-%
+% Visualization
+% -------------
+% The script illustrates both interpolants and the exact function u(x),
+% showing the influence of node placement on the local approximation.
 %-------------------------------------------------------------------------
+
 
 clear all
 close all

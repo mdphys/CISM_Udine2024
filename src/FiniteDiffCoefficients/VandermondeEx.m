@@ -1,32 +1,40 @@
-%------------------------------------------------------------------------
-%                   Approximation of Derivatives
-%          Task: approximate the derivative of exp(sin(x))
-%         CISM Course "Physics of Musical Instruments"
-%                         Michele Ducceschi
-%                      University of Bologna
-%                         13 Dec 2023
+%-------------------------------------------------------------------------
+%                                 CISM
+%         APPROXIMATION OF DERIVATIVES – QUADRATIC INTERPOLATION
+%             CISM Course "Physics of Musical Instruments"
+%                          Michele Ducceschi
+%                       University of Bologna
+%                            13 Dec 2023
 %-------------------------------------------------------------------------
 %
-% Goal
-% ----
-% Let u(x) = exp(sin x). We approximate u'(x0) using a *quadratic*
-% interpolant through the three samples:
-%     a = u(x0),  b = u(x0 + h),  c = u(x0 + 2h).
+% Purpose
+% -------
+% Let  u(x) = exp(sin x).  Approximate  u'(x0)  using a quadratic
+% interpolant constructed through three samples:
+%       a = u(x0),   b = u(x0 + h),   c = u(x0 + 2h).
 %
-% We build p(x) = al0 + al1 (x - x0) + al2 (x - x0)^2 so that
-% p(x0) = a, p(x0 + h) = b, p(x0 + 2h) = c.
-% From these conditions one obtains the closed-form coefficients:
-%     al0 = a
-%     al1 = (2b)/h - (3a)/(2h) - c/(2h)
-%     al2 =  a/(2h^2) - b/h^2 + c/(2h^2)
+% Method
+% ------
+% Build  p(x) = al0 + al1 (x − x0) + al2 (x − x0)^2
+% such that:
+%       p(x0) = a,   p(x0 + h) = b,   p(x0 + 2h) = c.
 %
-% The derivative estimate at the point is simply p'(x0) = al1.
-% We compare p(x) with:
-%   • the true u(x)
-%   • the first-order Taylor linearization at x0:
-%         u(x0) + u'(x0) (x - x0)
+% The coefficients are obtained in closed form:
+%       al0 = a
+%       al1 = (2b)/h − (3a)/(2h) − c/(2h)
+%       al2 =  a/(2h²) − b/h² + c/(2h²)
 %
-% We show results for h = 0.4 and h = 0.2.
+% Hence the derivative estimate at x0 is:
+%       p'(x0) = al1
+%
+% Visualization
+% -------------
+% Compare the quadratic interpolant p(x) with:
+%   • the true function u(x)
+%   • the first-order Taylor linearization
+%         u(x0) + u'(x0)(x − x0)
+%
+% Results are shown for two step sizes:  h = 0.4  and  h = 0.2.
 %-------------------------------------------------------------------------
 
 clear all

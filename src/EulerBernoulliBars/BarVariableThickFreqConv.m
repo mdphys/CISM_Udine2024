@@ -139,8 +139,8 @@ for nAdaptive = 1:3
             end
 
             % append
-            x_nodes = [x_nodes; x_next]; %#ok<AGROW>
-            hvec    = [hvec; h];         %#ok<AGROW>
+            x_nodes = [x_nodes; x_next]; 
+            hvec    = [hvec; h];         
             x       = x_next;
 
             % update section for next step (use current x)
@@ -160,16 +160,16 @@ for nAdaptive = 1:3
         end
 
         % Rebuild nodal fields
-        M      = numel(x_nodes) - 1;    % #elements; #nodes = M+1
+        M      = numel(x_nodes) - 1;    
         Mvec(nTest, nAdaptive) = M;
 
         x    = 0;
-        grid = 0;
+        gridPts = 0;
         Avec = Amax; Ivec = Imax; tvec = ymax;
 
         for m = 1:M
             x = x + hvec(m);
-            grid = [grid; x]; %#ok<AGROW>
+            gridPts = [gridPts; x]; 
 
             if (x >= xb) && (x < xb + xw)
                 y = ymin + Delta_y/(0.5*xw)^p * abs(x - xc)^p;
@@ -178,9 +178,9 @@ for nAdaptive = 1:3
             end
             I = (wb*y^3)/12;  A = wb*y;
 
-            Avec = [Avec; A]; %#ok<AGROW>
-            Ivec = [Ivec; I]; %#ok<AGROW>
-            tvec = [tvec; y]; %#ok<AGROW>
+            Avec = [Avec; A]; 
+            Ivec = [Ivec; I]; 
+            tvec = [tvec; y]; 
         end
 
         %==================== Operators & eigenproblem =====================
@@ -237,7 +237,7 @@ for nAdaptive = 1:3
         if nTest == 3
             figure(1)
             subplot(2,1,2)
-            plot(grid, 0.1*nAdaptive + ones(numel(grid),1), 'k+'); hold on
+            plot(gridPts, 0.1*nAdaptive + ones(numel(gridPts),1), 'k+'); hold on
             set(gca,'TickLabelInterpreter','latex')
             xlabel('$x$ (m)','Interpreter','latex')
             ylabel('strategy id','Interpreter','latex')
@@ -254,7 +254,7 @@ for nAdaptive = 1:3
     % Thickness profile (from the *last* built grid in this loop)
     figure(1)
     subplot(2,1,1)
-    plot(grid, tvec, 'LineWidth',1.2); hold on
+    plot(gridPts, tvec, 'LineWidth',1.2); hold on
     set(gca,'TickLabelInterpreter','latex')
     xlabel('$x$ (m)','Interpreter','latex')
     ylabel('$y$ (m)','Interpreter','latex')

@@ -1,36 +1,43 @@
-%------------------------------------------------------------------------
-%                   Approximation of Derivatives
-%          Task: Solve Poisson's Equation using Grids
-%                 CISM Course "Physics of Musical Instruments"
-%                         Michele Ducceschi
-%                      University of Bologna
-%                         11 May 2024
+%-------------------------------------------------------------------------
+%                                 CISM
+%               APPROXIMATION OF DERIVATIVES – POISSON SOLVER
+%             CISM Course "Physics of Musical Instruments"
+%                          Michele Ducceschi
+%                       University of Bologna
+%                            11 May 2024
 %-------------------------------------------------------------------------
 %
-% This script studies the effect of grid choice on the numerical solution
-% of the 1D Poisson problem with homogeneous Dirichlet boundary conditions:
+% Purpose
+% -------
+% Study the influence of grid choice on the numerical solution of the
+% one-dimensional Poisson problem with homogeneous Dirichlet boundaries:
 %
-%          s''(x) = w(x),    x in (0, L),      s(0) = s(L) = 0.
+%       s''(x) = w(x),    x ∈ (0, L),    s(0) = s(L) = 0.
 %
-% We use a manufactured (exact) solution
-%     s(x) = -log(cosh(x)) + (x/L)*log(cosh(L)),
-% which implies        w(x) = s''(x) = -(1 - tanh(x)^2) = -sech(x)^2.
+% Method
+% ------
+% The exact (manufactured) solution is:
+%       s(x) = -log(cosh(x)) + (x/L)*log(cosh(L)),
+% which implies:
+%       w(x) = s''(x) = -(1 − tanh(x)^2) = −sech(x)^2.
 %
 % The PDE is discretized with a second–order three-point finite-difference
 % stencil on three grids:
 %   1) Uniform grid
-%   2) Smoothly varying grid (monotone)
-%   3) Random grid (sorted)
+%   2) Smoothly varying (monotone) grid
+%   3) Random (sorted) grid
 %
-% For the uniform grid we also compare a 4th–order centered scheme.
-% For a range of mesh sizes M, we solve the linear systems and collect
-% RMS errors against the exact solution on the interior nodes.
+% For the uniform grid, a 4th–order centered scheme is also compared.
+% The script loops over multiple mesh sizes M, solves the resulting
+% linear systems, and evaluates the RMS error with respect to the exact
+% analytical solution at interior nodes.
 %
-% Plots:
-%   - Pointwise error profiles (for a representative mesh)
-%   - Convergence plot: RMS error versus Δx in log–log scale
-%
+% Outputs
+% -------
+% - Pointwise error profiles (for a representative mesh)
+% - Convergence plot: RMS error vs. Δx in log–log scale
 %-------------------------------------------------------------------------
+
 
 clear all
 close all
