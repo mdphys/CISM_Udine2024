@@ -25,6 +25,7 @@ CISM_Udine2024/
 │
 ├── LICENSE                    # License information
 ├── README.md                  # You are here
+├── CISM_LectureNotes.pdf      # The reference lecture notes 
 ├── .gitmodules                # If using submodules (for magpie‑matlab)
 ├── external/                  # External dependencies
 │   └── magpie‑matlab/         # The magpie‑matlab toolbox (see Dependencies)
