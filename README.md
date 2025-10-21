@@ -9,12 +9,11 @@ It focuses on numerical methods, eigenvalue problems, and their application to a
 
 The project includes a collection of examples, exercises, and numerical experiments covering topics such as:
 
+- Grid-based methods for differential equations in acoustics
+- Polynomial interpolation (Lagrange, Vandermonde) for grid coefficient generation
+- Poisson equation solvers on uniform and non-uniform grids
 - Euler–Bernoulli beam theory (vibration and frequency analysis)  
-- Finite‑difference methods for differential equations  
-- Numerical error / convergence studies  
-- Polynomial interpolation (Lagrange, Vandermonde)  
-- Poisson equation solvers and grid methods  
-- Use of the *MAGPIE* toolbox for orthotropic plate modal analysis and matrix computations  
+- Use of the *MAGPIE* toolbox for orthotropic plate modal analysis and time domain integration
 
 ---
 
