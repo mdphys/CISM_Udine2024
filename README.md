@@ -1,6 +1,6 @@
 # CISM Udine 2024 – Computational Mechanics Exercises
 
-This repository contains MATLAB scripts and resources developed for the **CISM Udine 2024** course on computational mechanics, with a focus on numerical methods for structural and continuum mechanics.
+This repository contains MATLAB scripts and resources developed for the [CISM course on the acoustics of musical instruments](https://cism.it/en/activities/courses/C2404/), with a focus on numerical methods eigenvalue problems.
 
 ##  Overview
 
