@@ -1,100 +1,149 @@
 %------------------------------------------------------------------------
 %                   Approximation of Derivatives
 %          Task: approximate the derivative of exp(sin(x))
-%                       Dr M Ducceschi
-%                   University of Bologna
-%                       13 Dec 2023
+%         CISM Course "Physics of Musical Instruments"
+%                         Michele Ducceschi
+%                      University of Bologna
+%                         13 Dec 2023
 %-------------------------------------------------------------------------
-
+%
+% Goal
+% ----
+% Let u(x) = exp(sin x). Around an expansion point x0, we:
+%   1) choose a small set of sample points {x_j},
+%   2) build the Vandermonde system in the *shifted* monomial basis
+%      (x - x0)^(k-1),
+%   3) compute the polynomial interpolant p(x) that matches u(x_j),
+%   4) read off p'(x0) from the coefficient of (x - x0) (i.e., a_2).
+%
+% We compare two distinct node distributions and visualize:
+%   - the exact function u(x)
+%   - the interpolating polynomial p(x)
+%   - the expansion point x0 and the chosen nodes
+%
+% Note
+% ----
+% In this centered monomial basis, if
+%     p(x) = a1 + a2 (x - x0) + a3 (x - x0)^2 + ...
+% then the derivative approximation at x0 is simply p'(x0) = a2.
+%-------------------------------------------------------------------------
 
 clear all
 close all
 clc
 
-h             = 0.001 ;
-x0            = 1.5 ;
-x             = -1:h:5.0 ;
-f             = exp(sin(x)) ;
+%% -------------------- Plotting grid and exact function ------------------
+hplot = 1e-3;                    % resolution only for plotting
+x0    = 1.5;                     % expansion point
+x     = -1:hplot:5.0;            % plotting grid
+u     = @(z) exp(sin(z));        % function
+f     = u(x);                    % exact curve on the plotting grid
+ymin  = 0; ymax = 3;             % y-limits for plots
 
+% Exact derivative for reference (not required but useful to print)
+uprime_exact = exp(sin(x0)) * cos(x0);
 
-%--- h1
-h = 0.75 ;
-samplepoints = [0.7*x0,x0+0.5*h,x0+2*h]' ;
-lt           = length(samplepoints) ;
+figure('Color','w')
 
-uvec = exp(sin(samplepoints)) ;
-VM   = zeros(lt,lt) ;
-for m = 1 : lt
-    for n = 1 : lt
-        VM(m,n) = (samplepoints(m)-x0)^(n-1) ;
+%% ============================ CASE h1 ==================================
+% Three nodes, deliberately asymmetric wrt x0
+h  = 0.75;
+Xs = [0.7*x0, x0 + 0.5*h, x0 + 2*h]';   % sample points
+lt = numel(Xs);
+
+% Vandermonde matrix centered at x0: VM(m,n) = (Xs(m) - x0)^(n-1)
+VM   = zeros(lt, lt);
+for m = 1:lt
+    dx = Xs(m) - x0;
+    VM(m,1) = 1;
+    for n = 2:lt
+        VM(m,n) = dx^(n-1);
     end
 end
 
-alvec = VM \ uvec ;
-p = 0 ;
-for m = 1 : lt
-    p = p + alvec(m)*(x-x0).^(m-1) ;
+% Solve for coefficients a so that p(x) = sum a_k (x - x0)^(k-1)
+uvec  = u(Xs);
+acoef = VM \ uvec;
+
+% Evaluate interpolant
+dx_all = x - x0;
+p = zeros(size(x));
+for k = 1:lt
+    p = p + acoef(k) * dx_all.^(k-1);
 end
 
+% Derivative estimate at x0 from polynomial coefficient
+uprime_est_case1 = acoef(2);
+
+% ----- Plot (left) -----
 subplot(1,2,1)
-plot(x,f,'LineWidth',1.2,'Color',[0 0 0]); hold on;
-plot(x,p,'LineStyle','-',...
-    'Color','r','linewidth',1.2) ;
-pl = line([x0,x0],[max(f),min(f)],'color','g','linestyle','-') ;
-
-for n = 1 : lt
-    fn = samplepoints(n) ;
-    pl = line([fn,fn],[max(f),min(f)],'color','k','linestyle','--') ;
+plot(x, f, 'k-', 'LineWidth', 1.2); hold on
+plot(x, p, 'r-', 'LineWidth', 1.2)
+% vertical line at x0
+line([x0 x0], [ymin ymax], 'Color','g','LineStyle','-','DisplayName','expansion point')
+% vertical lines at sample points (hide extra entries from legend)
+for n = 1:lt
+    ln = line([Xs(n) Xs(n)], [ymin ymax], 'Color','k','LineStyle','--');
     if n > 1
-        set(get(get(pl,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+        set(get(get(ln,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+    end
+end
+set(gca,'TickLabelInterpreter','latex','FontSize',14)
+xlabel('$x$','Interpreter','latex')
+ylabel('$u(x)$','Interpreter','latex')
+legend('$u(x)$','$p(x)$','expansion point','Interpreter','latex','Location','best')
+title(sprintf('Case 1: %d nodes,  h=%.2f  (p''(x_0)=%.6f,  u''(x_0)=%.6f)', ...
+      lt, h, uprime_est_case1, uprime_exact), 'Interpreter','none')
+ylim([ymin, ymax]); 
+
+%% ============================ CASE h2 ==================================
+% Four nodes, clustered to the right of x0
+h  = 0.75;
+Xs = [x0 - 0.4*h, x0 + 0.3*h, x0 + 0.8*h, x0 + 1.3*h]';
+lt = numel(Xs);
+
+% Vandermonde (centered at x0)
+VM   = zeros(lt, lt);
+for m = 1:lt
+    dx = Xs(m) - x0;
+    VM(m,1) = 1;
+    for n = 2:lt
+        VM(m,n) = dx^(n-1);
     end
 end
 
-set(gca,'TickLabelInterpreter','latex','fontsize',14) ;
-xlabel('$x$','Interpreter','latex') ;
-ylabel('$u(x)$','Interpreter','latex') ;
-legend('$u(x)$','$p(x)$','expansion point','Interpreter','latex')
-ylim([0,3])
+uvec  = u(Xs);
+acoef = VM \ uvec;
 
-
-%--- h2
-h = 0.75 ;
-samplepoints = [x0-0.4*h,x0+0.3*h,x0+0.8*h,x0+1.3*h]' ;
-lt           = length(samplepoints) ;
-
-uvec = exp(sin(samplepoints)) ;
-VM   = zeros(lt,lt) ;
-for m = 1 : lt
-    for n = 1 : lt
-        VM(m,n) = (samplepoints(m)-x0)^(n-1) ;
-    end
+% Evaluate interpolant
+p = zeros(size(x));
+for k = 1:lt
+    p = p + acoef(k) * dx_all.^(k-1);
 end
 
-alvec = VM \ uvec ;
-p = 0 ;
-for m = 1 : lt
-    p = p + alvec(m)*(x-x0).^(m-1) ;
-end
+uprime_est_case2 = acoef(2);
 
+% ----- Plot (right) -----
 subplot(1,2,2)
-plot(x,f,'LineWidth',1.2,'Color',[0 0 0]); hold on;
-plot(x,p,'LineStyle','-',...
-    'Color','r','linewidth',1.2) ;
-pl = line([x0,x0],[max(f),min(f)],'color','g','linestyle','-') ;
-
-for n = 1 : lt
-    fn = samplepoints(n) ;
-    pl = line([fn,fn],[max(f),min(f)],'color','k','linestyle','--') ;
+plot(x, f, 'k-', 'LineWidth', 1.2); hold on
+plot(x, p, 'r-', 'LineWidth', 1.2)
+line([x0 x0], [ymin ymax], 'Color','g','LineStyle','-','DisplayName','expansion point')
+for n = 1:lt
+    ln = line([Xs(n) Xs(n)], [ymin ymax], 'Color','k','LineStyle','--');
     if n > 1
-        set(get(get(pl,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
+        set(get(get(ln,'Annotation'),'LegendInformation'),'IconDisplayStyle','off');
     end
 end
+set(gca,'TickLabelInterpreter','latex','FontSize',14)
+xlabel('$x$','Interpreter','latex')
+ylabel('$u(x)$','Interpreter','latex')
+legend('$u(x)$','$p(x)$','expansion point','Interpreter','latex','Location','best')
+title(sprintf('Case 2: %d nodes,  h=%.2f  (p''(x_0)=%.6f,  u''(x_0)=%.6f)', ...
+      lt, h, uprime_est_case2, uprime_exact), 'Interpreter','none')
+ylim([ymin, ymax]); 
 
-set(gca,'TickLabelInterpreter','latex','fontsize',14) ;
-xlabel('$x$','Interpreter','latex') ;
-ylabel('$u(x)$','Interpreter','latex') ;
-legend('$u(x)$','$p(x)$','expansion point','Interpreter','latex')
-ylim([0,3])
-
-
-
+%% ---------------------------- Summary ----------------------------------
+fprintf('Expansion point x0 = %.6f\n', x0);
+fprintf('  Exact   u''(x0) = %.10f\n', uprime_exact);
+fprintf('  Case 1  p''(x0) = %.10f\n', uprime_est_case1);
+fprintf('  Case 2  p''(x0) = %.10f\n', uprime_est_case2);

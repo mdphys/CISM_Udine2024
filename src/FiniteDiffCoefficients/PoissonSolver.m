@@ -1,140 +1,158 @@
-%------------------------------------------------------------------------
-%                   Approximation of Derivatives
-%          Task: Solve Poisson's Equation using Grids
-%                       Dr M Ducceschi
-%                   University of Bologna
-%                       11 May 2024
-%-------------------------------------------------------------------------
+%==========================================================================
+%  APPROXIMATION OF DERIVATIVES
+%  Task: Solve 1D Poisson's Equation on Nonuniform Grids
+%--------------------------------------------------------------------------
+%  This script solves
+%       s''(x) = w(x)  on  x in (0, L),  with  s(0) = s(L) = 0
+%  using second–order finite differences on three grids:
+%     1) Uniform,  2) Smoothly varying,  3) Random (sorted)
+%
+%  Exact manufactured solution:
+%       s(x) = -log(cosh(x)) + (x/L)*log(cosh(L))
+%  which implies    w(x) = s''(x) = -(1 - tanh(x)^2) = -sech(x)^2.
+%
+%  The code assembles the discrete Laplacian for a nonuniform grid and
+%  compares the numerical solution against the exact solution.
+%
+%  Developed for: CISM Course "Physics of Musical Instruments"
+%  Author:       Michele Ducceschi
+%  Institution:  University of Bologna
+%  Date:         11 May 2024
+%==========================================================================
 
+clear; close all; clc;
 
-clear all
-close all
-clc
+%% -------------------------- Parameters ---------------------------------
+M = 20;             % Number of intervals
+L = 1.2;            % Domain length
+h = L/M;            % Reference spacing for the uniform grid
 
+% High-resolution grid for plotting the exact solution
+gridEx = linspace(0, L, 1000).';
+solEx  = s_exact(gridEx, L);
 
+%% ------------------------- Define Grids --------------------------------
+% Uniform grid (interior nodes only)
+grid1 = (1:M-1).' * h;
 
-M  = 20 ;
-L  = 1.2 ;
+% Smooth grid (monotone increasing after flipping)
+grid2 = (L^2 - ((1:M-1).' * h).^2) / L;
+grid2 = flipud(grid2);   % ensure ascending order
 
-h = L/M ;
+% Random grid (sorted interior nodes)
+rng(0);                  % for reproducibility
+grid3 = sort(L * rand(M-1, 1));
 
-grid1   = (1:M-1)'*h ;
-grid2   = (L^2 - ((1:M-1)'*h).^2)/L ;
-grid2   = grid2(end:-1:1) ;
-grid3   = L*rand(M-1,1) ;
-grid3   = sort(grid3) ;
-gridEx  = (0:500)'*L/500 ;
+%% --------------------- Right-hand side w(x) ----------------------------
+w1 = w_rhs(grid1);
+w2 = w_rhs(grid2);
+w3 = w_rhs(grid3);
 
-w1    = -(1-tanh(grid1).^2) ;
-w2    = -(1-tanh(grid2).^2) ;
-w3    = -(1-tanh(grid3).^2) ;
+%% -------------------- Discrete operators (A) ---------------------------
+A1 = assemble_laplacian_1d_nonuniform(grid1, L);
+A2 = assemble_laplacian_1d_nonuniform(grid2, L);
+A3 = assemble_laplacian_1d_nonuniform(grid3, L);
 
-s1    = -log(cosh(grid1)) + L^(-1)*grid1*log(cosh(L))  ;
-s2    = -log(cosh(grid2)) + L^(-1)*grid2*log(cosh(L))  ;
-s3    = -log(cosh(grid3)) + L^(-1)*grid3*log(cosh(L))  ;
+%% ------------------------- Solve systems -------------------------------
+s1 = A1 \ w1;
+s2 = A2 \ w2;
+s3 = A3 \ w3;
 
-solEx    = -log(cosh(gridEx)) + L^(-1)*gridEx*log(cosh(L))  ;
+%% --------------------------- Errors ------------------------------------
+e1 = s_exact(grid1, L) - s1;
+e2 = s_exact(grid2, L) - s2;
+e3 = s_exact(grid3, L) - s3;
 
-D1 = zeros(M-1,M-1) ;
-D2 = zeros(M-1,M-1) ;
-D3 = zeros(M-1,M-1) ;
+L2_1 = sqrt(trapz([0;grid1;L], [0; e1; 0].^2));
+L2_2 = sqrt(trapz([0;grid2;L], [0; e2; 0].^2));
+L2_3 = sqrt(trapz([0;grid3;L], [0; e3; 0].^2));
 
-for m = 2 : M - 2
+fprintf('L2 errors:  uniform=%.3e,  smooth=%.3e,  random=%.3e\n', L2_1, L2_2, L2_3);
 
-    D1m       = grid1(m)-grid1(m-1) ; 
-    D1p       = grid1(m+1)-grid1(m) ;
-    D1(m,m)   = -2/(D1m*D1p) ;
-    D1(m,m+1) = 2/(D1p)/(D1m+D1p) ;
-    D1(m,m-1) = 2/(D1m)/(D1m+D1p) ;
+%% --------------------------- Plotting ----------------------------------
+figure('Color','w');
 
+subplot(3,1,1);
+hold on;
+plot(gridEx, solEx, '-', 'LineWidth', 1.5);                 % exact curve
+plot([0; grid1; L], [0; s1; 0], '--', 'LineWidth', 1.2);    % numerical
+plot(grid1, zeros(size(grid1)), 'ks', 'MarkerFaceColor','k'); % nodes
+plot([0 L], [0 0], 'o', 'MarkerFaceColor',[0.7 1 1], 'MarkerEdgeColor','k');
+title('Uniform Grid','Interpreter','latex');
+xlabel('$x$','Interpreter','latex'); ylabel('$s(x)$','Interpreter','latex');
+legend('Exact','Numerical','Nodes','BCs','Interpreter','latex','Location','best');
+set(gca,'TickLabelInterpreter','latex','FontSize',12); ylim([-0.05, 0.15]); grid on;
 
-    D2m       = grid2(m)-grid2(m-1) ; 
-    D2p       = grid2(m+1)-grid2(m) ;
-    D2(m,m)   = -2/(D2m*D2p) ;
-    D2(m,m+1) = 2/(D2p)/(D2m+D2p) ;
-    D2(m,m-1) = 2/(D2m)/(D2m+D2p) ;
+subplot(3,1,2);
+hold on;
+plot(gridEx, solEx, '-', 'LineWidth', 1.5);
+plot([0; grid2; L], [0; s2; 0], '--', 'LineWidth', 1.2);
+plot(grid2, zeros(size(grid2)), 'ks', 'MarkerFaceColor','k');
+plot([0 L], [0 0], 'o', 'MarkerFaceColor',[0.7 1 1], 'MarkerEdgeColor','k');
+title('Smooth Grid','Interpreter','latex');
+xlabel('$x$','Interpreter','latex'); ylabel('$s(x)$','Interpreter','latex');
+legend('Exact','Numerical','Nodes','BCs','Interpreter','latex','Location','best');
+set(gca,'TickLabelInterpreter','latex','FontSize',12); ylim([-0.05, 0.15]); grid on;
 
+subplot(3,1,3);
+hold on;
+plot(gridEx, solEx, '-', 'LineWidth', 1.5);
+plot([0; grid3; L], [0; s3; 0], '--', 'LineWidth', 1.2);
+plot(grid3, zeros(size(grid3)), 'ks', 'MarkerFaceColor','k');
+plot([0 L], [0 0], 'o', 'MarkerFaceColor',[0.7 1 1], 'MarkerEdgeColor','k');
+title('Random Grid','Interpreter','latex');
+xlabel('$x$','Interpreter','latex'); ylabel('$s(x)$','Interpreter','latex');
+legend('Exact','Numerical','Nodes','BCs','Interpreter','latex','Location','best');
+set(gca,'TickLabelInterpreter','latex','FontSize',12); ylim([-0.05, 0.15]); grid on;
 
-    D3m       = grid3(m)-grid3(m-1) ; 
-    D3p       = grid3(m+1)-grid3(m) ;
-    D3(m,m)   = -2/(D3m*D3p) ;
-    D3(m,m+1) = 2/(D3p)/(D3m+D3p) ;
-    D3(m,m-1) = 2/(D3m)/(D3m+D3p) ;
+sgtitle('1D Poisson: Exact vs. Finite Difference on Nonuniform Grids', ...
+    'Interpreter','latex','FontSize',16);
 
+%% ======================= Local helper functions ========================
+function A = assemble_laplacian_1d_nonuniform(xi, L)
+%ASSEMBLE_LAPLACIAN_1D_NONUNIFORM  Second-derivative matrix on (0,L)
+% for a *nonuniform* grid with homogeneous Dirichlet BCs at x=0 and x=L.
+% INPUT:
+%   xi : column vector of interior nodes (ascending), size (M-1) x 1
+%   L  : domain length
+% OUTPUT:
+%   A  : sparse (M-1) x (M-1) matrix approximating d^2/dx^2
+%
+% The stencil is the standard second-order 3-point formula on nonuniform
+% grids (derived from local quadratic interpolation).
 
+    xi = xi(:);                 % ensure column
+    M1 = numel(xi);             % number of interior nodes
+    A  = spalloc(M1, M1, 3*M1); % allocate tridiagonal
+
+    % Interior nodes: i = 2..M-2 in 1-based indexing
+    for m = 2:M1-1
+        hm   = xi(m)   - xi(m-1);         % left spacing
+        hp   = xi(m+1) - xi(m);           % right spacing
+        A(m,m)   = -2/(hm*hp);
+        A(m,m-1) =  2/(hm*(hm+hp));
+        A(m,m+1) =  2/(hp*(hm+hp));
+    end
+
+    % Left boundary row (couples to first interior neighbor and boundary x=0)
+    hm = xi(1) - 0;                       % distance to left boundary
+    hp = xi(2) - xi(1);                   % right spacing
+    A(1,1) = -2/(hm*hp);
+    A(1,2) =  2/(hp*(hm+hp));
+
+    % Right boundary row (couples to last interior neighbor and boundary x=L)
+    hm = xi(end) - xi(end-1);             % left spacing
+    hp = L - xi(end);                     % distance to right boundary
+    A(end,end)   = -2/(hm*hp);
+    A(end,end-1) =  2/(hm*(hm+hp));
 end
 
-D1m           = grid1(1) ; 
-D1p           = grid1(2)-grid1(1) ;
-D1(1,1)       = -2/(D1m*D1p) ;
-D1(1,2)       = 2/(D1p*(D1m+D1p)) ;
-D1m           = grid1(M-1)-grid1(M-2) ;
-D1p           = L-grid1(M-1) ;
-D1(end,end)   = -2/(D1m*D1p) ;
-D1(end,end-1) = 2/(D1m*(D1m+D1p)) ;
+function y = w_rhs(x)
+%W_RHS  Right-hand side w(x) = s''(x) for manufactured solution
+    y = -(1 - tanh(x).^2);   % = -sech^2(x)
+end
 
-
-D2m           = grid2(1) ; 
-D2p           = grid2(2)-grid2(1) ;
-D2(1,1)       = -2/(D2m*D2p) ;
-D2(1,2)       = 2/(D2p*(D2m+D2p)) ;
-D2m           = grid2(M-1)-grid2(M-2) ;
-D2p           = L-grid2(M-1) ;
-D2(end,end)   = -2/(D2m*D2p) ;
-D2(end,end-1) = 2/(D2m*(D2m+D2p)) ;
-
-
-D3m           = grid3(1) ; 
-D3p           = grid3(2)-grid3(1) ;
-D3(1,1)       = -2/(D3m*D3p) ;
-D3(1,2)       = 2/(D3p*(D3m+D3p)) ;
-D3m           = grid3(M-1)-grid3(M-2) ;
-D3p           = L-grid3(M-1) ;
-D3(end,end)   = -2/(D3m*D3p) ;
-D3(end,end-1) = 2/(D3m*(D3m+D3p)) ;
-
-
-s1Approx      = D1 \ w1 ;
-s2Approx      = D2 \ w2 ;
-s3Approx      = D3 \ w3 ;
-
-
-
-
-subplot(3,1,1)
-%plot(gridEx,solEx,'color',[0.5,0.5,0.5],'linewidth',5); hold on;
-plot([0;grid1;L],[0;s1;0],'-b') ; hold on;
-plot([0;grid1;L],[0;s1Approx;0],'--k') ; 
-plot(grid1,0*grid1,'linestyle','none','marker','square','markerfacecolor','k','markeredgecolor','k') ;
-plot([0,L],[0,0],'linestyle','none','marker','o','markerfacecolor','c','markeredgecolor','k')
-set(gca,TickLabelInterpreter = 'latex') ;
-title('Uniform Grid','interpreter','latex') ;
-ylim([-0.05,0.15])
-set(gca,'fontsize',12)
-legend('Exact', 'Num.')
-subplot(3,1,2)
-%plot(gridEx,solEx,'color',[0.5,0.5,0.5],'linewidth',5); hold on;
-plot([0;grid2;L],[0;s2;0],'-b') ; hold on;
-plot([0;grid2;L],[0;s2Approx;0],'--r') ; 
-
-plot(grid2,0*grid2,'linestyle','none','marker','square','markerfacecolor','k','markeredgecolor','k') ;
-plot([0,L],[0,0],'linestyle','none','marker','o','markerfacecolor','c','markeredgecolor','k')
-set(gca,TickLabelInterpreter = 'latex') ;
-title('Smooth Grid','interpreter','latex') ;
-set(gca,'fontsize',12)
-legend('Exact', 'Num.')
-ylim([-0.05,0.15])
-subplot(3,1,3)
-%plot(gridEx,solEx,'color',[0.5,0.5,0.5],'linewidth',5); hold on;
-plot([0;grid3;L],[0;s3;0],'-b') ; hold on ;
-plot([0;grid3;L],[0;s3Approx;0],'--g') ; 
-plot(grid3,0*grid3,'linestyle','none','marker','square','markerfacecolor','k','markeredgecolor','k') ;
-plot([0,L],[0,0],'linestyle','none','marker','o','markerfacecolor','c','markeredgecolor','k')
-set(gca,TickLabelInterpreter = 'latex') ;
-title('Random Grid','interpreter','latex') ;
-ylim([-0.05,0.15])
-set(gca,'fontsize',12)
-legend('Exact', 'Num.')
-
-
-
+function s = s_exact(x, L)
+%S_EXACT  Exact solution satisfying s(0)=s(L)=0
+    s = -log(cosh(x)) + (x./L) * log(cosh(L));
+end
