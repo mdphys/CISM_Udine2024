@@ -53,7 +53,7 @@ CISM_Udine2024-main/
 
 ##  Educational Purpose
 
-This material supports lectures and workshops in the **acoustics of musical instruments** and, particularly, **numerical analysis** and **eigenvalue problems**. Grid-based methods are employed to solve problems in 1 spatial dimension. Non-uniform grid are introduced as a means of solving problems with non-uniform geometrical or material parameters, disproving the misconception that finite differences can only be employed on uniform meshes. 
+This material supports lectures and workshops in the acoustics of musical instruments and, particularly, numerical analysis and eigenvalue problems. Grid-based methods are employed to solve problems in one spatial dimension. Non-uniform grids are introduced to solve problems with non-uniform geometrical or material parameters, disproving the misconception that finite differences can only be employed on uniform meshes. 
 
 ##  License
 
