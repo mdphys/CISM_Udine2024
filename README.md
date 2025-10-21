@@ -1,63 +1,112 @@
-# CISM Udine 2024 – Computational Mechanics Exercises
+# CISM Udine 2024 – Physics of Musical Instruments
 
-This repository contains MATLAB scripts and resources developed for the [CISM course on the acoustics of musical instruments](https://cism.it/en/activities/courses/C2404/), with a focus on numerical methods and eigenvalue problems.
+This repository contains MATLAB scripts and resources developed for the course [Physics of Musical Instruments](https://cism.it/en/activities/courses/C2404/), held at Udine in May 2024 (by CISM).  
+It focuses on numerical methods, eigenvalue problems, and their application to acoustics and instrument‑making.
 
-##  Overview
+---
+
+## Overview
 
 The project includes a collection of examples, exercises, and numerical experiments covering topics such as:
-- Euler–Bernoulli beam theory
-- Finite difference methods
-- Numerical error convergence
-- Polynomial interpolation via Lagrange and Vandermonde methods
-- Poisson equation solvers
 
+- Euler–Bernoulli beam theory (vibration and frequency analysis)  
+- Finite‑difference methods for differential equations  
+- Numerical error / convergence studies  
+- Polynomial interpolation (Lagrange, Vandermonde)  
+- Poisson equation solvers and grid methods  
+- Use of the *MAGPIE* toolbox for orthotropic plate modal analysis and matrix computations  
 
-##  Repository Structure
+---
+
+## Repository Structure
 
 ```
-CISM_Udine2024-main/
+CISM_Udine2024/
 │
-├── LICENSE                     # License information
-├── README.md                   # Project documentation (this file)
-└── src/                        # MATLAB source files
-    ├── EulerBernoulliBars/     # Beam vibration and frequency analysis
-    └── FiniteDiffCoefficients/ # Finite difference stencils and Poisson solver examples
+├── LICENSE                    # License information
+├── README.md                  # You are here
+├── .gitmodules                # If using submodules (for magpie‑matlab)
+├── external/                  # External dependencies
+│   └── magpie‑matlab/         # The magpie‑matlab toolbox (see Dependencies)
+└── src/                       # MATLAB source files
+    ├── EulerBernoulliBars/    # Beam vibration and frequency analysis
+    ├── FiniteDiffCoefficients/ # Finite difference stencils and Poisson solver examples
+    └── …                      # (other folders as required)
 ```
 
-##  Requirements
+---
 
-- **MATLAB R2020b** or newer (or GNU Octave for open-source users)
-- Basic knowledge of MATLAB syntax and numerical methods
+## Dependencies
 
-##  Usage
+- **MATLAB** (R2020b or newer) or **GNU Octave** (for open‑source users)  
+- Basic knowledge of MATLAB syntax and numerical methods  
+- The toolbox magpie‑matlab is optionally included in `external/magpie‑matlab/` via a Git submodule. If you’ve not initialized it yet, run:
 
-1. Clone or download this repository:
+  ```bash
+  git submodule update --init --recursive
+  ```
+
+  Then in MATLAB add its path:
+
+  ```matlab
+  addpath(genpath('external/magpie‑matlab'));
+  savepath;
+  ```
+
+  This toolbox provides additional functionality for modal and matrix‐analysis tasks used in the course.
+
+---
+
+## Usage
+
+1. Clone or download the repository:
+
    ```bash
-   git clone https://github.com/yourusername/CISM_Udine2024.git
+   git clone https://github.com/mdphys/CISM_Udine2024.git
+   cd CISM_Udine2024
+   git submodule update --init --recursive
    ```
-   or download the ZIP archive and extract it.
 
-2. Open MATLAB and set the working directory to the project root:
+2. In MATLAB, set the working directory to `src`, e.g.:
+
    ```matlab
-   cd('path/to/CISM_Udine2024-main/src')
+   cd('path/to/CISM_Udine2024/src');
    ```
 
-3. Run any of the example scripts, e.g.:
+3. Run an example script, for instance:
+
    ```matlab
-   BarVariableThick
-   PoissonSolver
+   BarVariableThick;
+   PoissonSolver;
    ```
 
-4. Modify parameters or code as desired to explore the numerical behavior.
+   Then experiment by modifying parameters or the code to explore the numerical behaviour.
 
-##  Educational Purpose
+---
 
-This material supports lectures and workshops in the acoustics of musical instruments and, particularly, numerical analysis and eigenvalue problems. Grid-based methods are employed to solve problems in one spatial dimension. Non-uniform grids are introduced to solve problems with non-uniform geometrical or material parameters, disproving the misconception that finite differences can only be employed on uniform meshes. 
+## Educational Purpose
 
-##  License
+This material supports lectures and workshops in the acoustics of musical instruments and, particularly, numerical analysis and eigenvalue problems.  
+Grid‑based methods are employed to solve problems in one spatial dimension. Non‑uniform grids are introduced to address varying geometrical or material parameters, showing that finite‐difference methods are not restricted to uniform meshes.
 
-This project is distributed under the terms of the license found in the `LICENSE` file.
+---
 
-##  Acknowledgments
+## License
 
-Developed for the **CISM course: Physics of Musical Instruments Applied to Instrument Making, Udine, Italy, May 2024**.
+This project is distributed under the terms of the [MIT License](LICENSE).  
+You are free to use, modify, and distribute the material. Attribution and including the original license are appreciated.
+
+---
+
+## Acknowledgments
+
+Developed for the course *Physics of Musical Instruments Applied to Instrument Making*, Udine, Italy — May 2024.  
+Special thanks to all teaching staff, workshop participants, and contributors.
+
+---
+
+## About
+
+This repository holds the scripts used to produce the case studies and numerical examples in the lecture notes.
+
+---
