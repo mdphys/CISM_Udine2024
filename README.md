@@ -8,7 +8,7 @@ The project includes a collection of examples, exercises, and numerical experime
 - Euler–Bernoulli beam theory
 - Finite difference methods
 - Numerical error convergence
-- Polynomial interpolation and Vandermonde systems
+- Polynomial interpolation via Lagrange and Vandermonde methods
 - Poisson equation solvers
 
 These materials are intended for educational and research purposes in computational mechanics, numerical methods, and applied mathematics.
