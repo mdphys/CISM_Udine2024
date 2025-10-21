@@ -135,7 +135,7 @@ for nBar = 1:3
 
     for m = 1:M
         x = x + hvec(m);
-        grid = [grid; x]; %#ok<AGROW>
+        grid = [grid; x]; 
 
         if (x >= xb) && (x < xb + xw)
             y = ymin + Dy/(0.5*xw)^pexp * abs(x - xc)^pexp;
